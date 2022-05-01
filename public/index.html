@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>GPS Data Viewer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A website that allows for the viewing, and modifying of GPX, GPS documents">
+    <meta name="keywords" content="gps, gps data viewer">
+    <meta name="author" content="Remus Calugarescu">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+<body>
+    <!-- Header section -->
+    <div class="text-white bg-dark text-center rounded">
+        <h1>Remus Calugarescu's GPS Data Viewer</h1>
+    </div>
+    
+    <!-- File Log Section -->
+    <div id="file-log-section">
+        <hr>
+        <h3>File Log Panel</h3>
+        <div class="container">
+            <form id="submit-upload-button" action="/upload" method="post" enctype="multipart/form-data">
+                <input class="btn btn-secondary" type="file" name="uploadFile" value="Upload-File" accept=".gpx">
+                <input class="btn btn-secondary" type="submit" name="submitFile" value="Upload Selected File">
+            </form>
+            <table id="file-log-section-table" class="table table-hover table-scrollable">
+                <thead>
+                    <tr>
+                        <th>File name (click to download)</th>
+                        <th>Version</th>
+                        <th>Creator</th>
+                        <th>Number of waypoints</th>
+                        <th>Number of routes</th>
+                        <th>Number of tracks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="no-files-filler">
+                        <td>No files!</td>
+                    </tr>
+                    <!-- Files in server get added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- GPX View Panel -->
+    <div id="gpx-view-panel-section">
+        <hr>
+        <h3>GPX View Panel</h3>
+        <div id="gpx-view-panel-table" class="container">
+            <div class="dropdown">
+                <select id="gpx-view-panel-dropdown-menu" class="target btn btn-secondary dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                    <option selected>No Selection</option>
+                    <!-- File options go here -->
+                </select>
+            </div>
+            <table id="gpx-view-panel-rte-trk-table" class="table table-hover table-scrollable">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Name</th>
+                        <th>Number of points</th>
+                        <th>Length</th>
+                        <th>Loop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Track and route data get added here -->
+                </tbody>
+            </table>
+            <table class="table table-no-lines">
+                <tr>
+                    <td>
+                        <label for="gpx-view-row">Choose row to view GPXData</label>
+                        <input id="gpx-view-row" type="text" class="form-control" placeholder="Enter a row number">
+                    </td>
+                    <td>
+                        <button id="gpx-view-confirm" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">View GPXData</button>
+                    </td>
+                </tr>
+            </table>
+            <table class="table table-no-lines">
+                <tr>
+                    <td>
+                        <label>Choose row to rename route/track</label>
+                        <input id="gpx-rename-row" type="text" class="form-control" placeholder="Enter a row number">
+                        <input id="gpx-rename-name" type="text" class="form-control" placeholder="Enter a new name">
+                    </td>
+                    <td>
+                        <button id="gpx-rename-confirm" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Rename Item</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Create GPX Section -->
+    <div id="create-gpx-section">
+        <hr>
+        <h3>Create GPX</h3>
+        <div class="container">
+            <table class="table table-no-lines">
+                <tr>
+                    <td>Filename:</td>
+                    <td>
+                        <div class="form-group">
+                            <input id="create-filename" type="text" class="form-control" placeholder="Enter a file name">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Version:</td>
+                    <td>
+                        <div class="form-group">
+                            <select id="create-version" class="target dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                                <option selected>1.1</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Creator:</td>
+                    <td>
+                        <div class="form-group">
+                            <input id="create-creator" type="text" class="form-control" placeholder="Enter a creator">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <button id="create-doc-button" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Create GPX</button>
+        </div>
+    </div>
+
+    <!-- Add Route Section -->
+    <div id="add-route-section">
+        <hr>
+        <h3>Add route</h3>
+        <div id="add-route-table" class="container">
+            <div class="dropdown">
+                <select id="add-route-panel-dropdown-menu" class="target btn btn-secondary dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                    <option selected>No Selection</option>
+                    <!-- File options go here -->
+                </select>
+            </div>
+            <table class="table">
+                <tr>
+                    <td>Route name:</td>
+                    <td>
+                        <div class="form-group">
+                            <input id="add-route-name" type="text" class="form-control" placeholder="Enter route name">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Waypoint data:</td>
+                    <td>
+                        <div class="form-group">
+                            <input id="add-latitude" type="text" class="form-control" placeholder="Enter latitude">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input id="add-longitude" type="text" class="form-control" placeholder="Enter longitude">
+                        </div>
+                    </td>
+                    <td>
+                        <button id="add-latitude-longitude-confirm" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Add</button>
+                    </td>
+                </tr>
+            </table>
+            <button id="add-route-confirm" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Add route</button>
+        </div>
+    </div>
+
+    <!-- Find Paths Between Section -->
+    <div id="find-paths-between-section">
+        <hr>
+        <h3>Find path Between</h3>
+        <div class="container">
+            <table class="table table-no-lines">
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input id="lat-start" type="text" class="form-control" placeholder="Enter start latitude">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input id="lat-end" type="text" class="form-control" placeholder="Enter end latitude">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input id="lon-start" type="text" class="form-control" placeholder="Enter start longitude">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input id="lon-end" type="text" class="form-control" placeholder="Enter end longitude">
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <table class="table table-no-lines">
+                <tr>
+                    <td>
+                        <label>Comparison Accuracy:</label>
+                    </td>
+                    <td>
+                        <input id="delta-val" type="text" class="form-control" placeholder="Enter point comparison accuracy value">
+                    </td>
+                    <td>
+                        <button id="find-path-confirm" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Find path</button>
+                    </td>
+                </tr>
+            </table>
+            <table id="get-path-table" class="table table-hover table-scrollable">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Name</th>
+                        <th>Number of points</th>
+                        <th>Length</th>
+                        <th>Loop</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Track and route data get added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Database Functionalities -->
+    <div id="db-functionalities">
+        <hr>
+        <h3>Database</h3>
+        <div class="container"></div>
+            <table>
+                <tr>
+                    <td>
+                        <label>Login to a Database</label>
+                        <input id="username" type="text" class="form-control" placeholder="Username">
+                        <input id="password" type="password" class="form-control" placeholder="Password">
+                        <input id="dbname" type="text" class="form-control" placeholder="Database Name">
+                        <button id="login" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Login</button>
+                    </td>
+                    <td>
+                        <label>Display DB Status</label>
+                        <button id="refresh" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Refresh</button>
+                        <label>Other Functionalities</label>
+                        <button id="store" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Store all Files</button>
+                        <button id="clear" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Clear all Data</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Route Queries -->
+    <div id="route-queries">
+        <hr>
+        <h3>(Q1-Q2) Execute Route Queries</h3>
+        <div class="container"></div>
+            <label class="font-weight-bold">Display all routes, or all routes of a specific file</label>
+            <label>Leave the drop down menu on "All Files" to display all routes from all files, or select a file to display all routes of a specfic file, you can also sort routes by name, or by length using the buttons below</label>
+            <select id="route-query-dropdown-menu" class="target btn btn-secondary dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                <option selected>All Files</option>
+                <!-- File options go here -->
+            </select>
+            <table id="route-query-options">
+                <tr>
+                    <td>
+                        <input id="route-button-name" name="selection" type="radio" class="form-control" placeholder="Name" checked="checked">
+                        <label for="route-button-name">Name</label>
+                    </td>
+                    <td>
+                        <input id="route-button-length" name="selection" type="radio" class="form-control" placeholder="Length">
+                        <label for="route-button-length">Length</label>
+                    </td>
+                    <td>
+                        <button id="route-execute" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Execute Query</button>
+                    </td>
+                </tr>
+            </table>
+            <table id="route-query-table" class="table table-hover table-scrollable">
+                <thead>
+                    <tr>
+                        <th>Route Name</th>
+                        <th>Route Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Route data gets added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Point Queries -->
+    <div id="point-queries">
+        <hr>
+        <h3>(Q3-Q4) Execute Point Queries</h3>
+        <div class="container"></div>
+            <label class="font-weight-bold">Display all points of a specific route, or a file</label>
+            <label>Enter a route name to display all points of a specific route, or leave the "Enter route name" field empty to display all points of all routes from a file. You can also select to sort by name, or by length if you want to display all points from a file, note that there is no sorting if you choose to enter a route name</label>
+            <select id="point-query-dropdown-menu" class="target btn btn-secondary dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                <option selected>No Selection</option>
+                <!-- File options go here -->
+            </select>
+            <table id="point-query-options">
+                <tr>
+                    <td>
+                        <input id="point-route-name" type="text" class="form-control" placeholder="Enter route name">
+                    </td>
+                    <td>
+                        <input id="point-button-name" name="selection" type="radio" class="form-control" placeholder="Name" checked="checked">
+                        <label for="point-button-name">Name</label>
+                    </td>
+                    <td>
+                        <input id="point-button-length" name="selection" type="radio" class="form-control" placeholder="Length">
+                        <label for="point-button-length">Length</label>
+                    </td>
+                    <td>
+                        <button id="point-execute" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Execute Query</button>
+                    </td>
+                </tr>
+            </table>
+            <table id="point-query-table" class="table table-hover table-scrollable">
+                <thead>
+                    <tr>
+                        <th>Route Name</th>
+                        <th>Point Index</th>
+                        <th>Point Name</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Point data get added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Shortest/Longest Routes Queries -->
+    <div id="shortest-longest-queries">
+        <hr>
+        <h3>(Q5) Execute N Shortest/Longest Routes Queries</h3>
+        <div class="container"></div>
+            <label class="font-weight-bold">Display the N shortest/longest routes from a specific file</label>
+            <label>Enter a length, and then select one of "Shortest" and "Longest", then one of "Name" and "Length"</label>
+            <select id="shortest-longest-query-dropdown-menu" class="target btn btn-secondary dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+                <option selected>No Selection</option>
+                <!-- File options go here -->
+            </select>
+            <table id="shortest-longest-query-options">
+                <tr>
+                    <td>
+                        <input id="shortest-longest-length" type="text" class="form-control" placeholder="Enter value of N">
+                    </td>
+                    <td>
+                        <input id="shortest-longest-button-short" name="length" type="radio" class="form-control" placeholder="Name" checked="checked">
+                        <label for="shortest-longest-button-short">Shortest</label>
+                    </td>
+                    <td>
+                        <input id="shortest-longest-button-long" name="length" type="radio" class="form-control" placeholder="Length">
+                        <label for="shortest-longest-button-long">Longest</label>
+                    </td>
+                    <td>
+                        <input id="shortest-longest-button-name" name="selection" type="radio" class="form-control" placeholder="Name" checked="checked">
+                        <label for="shortest-longest-button-name">Name</label>
+                    </td>
+                    <td>
+                        <input id="shortest-longest-button-length" name="selection" type="radio" class="form-control" placeholder="Length">
+                        <label for="shortest-longest-button-length">Length</label>
+                    </td>
+                    <td>
+                        <button id="shortest-longest-execute" class="btn btn-secondary" type="button" aria-haspopup="true" aria-expanded="false">Execute Query</button>
+                    </td>
+                </tr>
+            </table>
+            <table id="shortest-longest-query-table" class="table table-hover table-scrollable">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Route Name</th>
+                        <th>Route Length</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Route data get added here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Leave me at the bottom of body -->
+    <script src="/index.js"></script>
+</body>
+</html>

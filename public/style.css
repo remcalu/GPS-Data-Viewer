@@ -1,0 +1,224 @@
+/* Default content */
+
+html {
+	width: 60%;
+	height: 100%;
+	min-height: 100%;
+	margin: 0 auto;
+	font-size: 16px;
+	background-color: #FFFFFF;
+}
+
+body {
+	height: 100%;
+	min-height: 100%;
+	line-height: 1.75;
+	background-color: #FFFFFF;
+}
+
+a:link:hover {
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+	text-decoration: underline;
+	cursor: pointer;
+	cursor: hand;
+}
+
+input[type=submit],
+button {
+	cursor: pointer;
+	cursor: hand;
+}
+
+@media(max-width: 900px) {
+	html {
+		font-size: 14px !important;
+		width: 80% !important;
+	}
+}
+
+@media(max-width: 480px) {
+	html {
+		font-size: 12px !important;
+		width: 90% !important;
+	}
+}
+
+@media(max-width: 320px) {
+	html {
+		font-size: 12px !important;
+		width: 100% !important;
+	}
+}
+
+
+/* Content added by Remus Calugarescu */
+
+#file-log-section table {
+	margin-top: 2%;
+	margin-bottom: 2%;
+}
+
+#file-log-section thead th {
+	text-align: center;
+	vertical-align: middle;
+	padding: 10px
+}
+
+#file-log-section tbody td {
+	text-align: center;
+	vertical-align: middle;
+	font-weight: normal;
+}
+
+#gpx-view-panel-section table {
+	margin-top: 2%;
+	margin-bottom: 2%;
+}
+
+#gpx-view-panel-section thead th {
+	text-align: center;
+	vertical-align: middle;
+}
+
+#gpx-view-panel-section tbody td {
+	text-align: center;
+	vertical-align: middle;
+	font-weight: normal;
+}
+
+#gpx-view-selection-button div {
+	text-align: left;
+	vertical-align: left;
+}
+
+#gpx-view-panel-dropdown {
+	width: 100%;
+}
+
+#gpx-view-panel-dropdown-menu {
+	width: 100%;
+	text-align: center;
+}
+
+#add-route-panel-dropdown-menu {
+	width: 100%;
+	text-align: center;
+}
+
+.table-scrollable {
+	overflow-y: scroll;
+	overflow-x: scroll;
+	height: 350px;
+	display: block;
+}
+
+.table-scrollable th {
+	width: 1%;
+}
+
+.table-no-lines td {
+	padding: 5px;
+	margin: 0;
+	border: 0;
+}
+
+#add-route-table td {
+	padding-bottom: 0;
+	margin: 0;
+	border: 0;
+}
+
+#gpx-rename-row {
+	margin-bottom: 10px !important;
+}
+
+#create-version {
+	width: 100%;
+}
+
+#db-functionalities input {
+	margin-bottom: 10px;
+}
+
+#db-functionalities td {
+	padding-left: 20px;
+	padding-right: 20px;
+	width: 50%;
+}
+
+#db-functionalities label {
+	font-weight: bold;
+}
+
+#login {
+	width: 80%;
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-bottom: 10px;
+}
+
+#refresh {
+	width: 80%;
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-bottom: 10px;
+}
+
+#store {
+	width: 80%;
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-bottom: 10px;
+}
+
+#clear {
+	width: 80%;
+	margin-left: 10%;
+	margin-right: 10%;
+	margin-bottom: 10px;
+}
+
+#route-query-dropdown-menu {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#route-query-options {
+    margin-bottom: 20px;
+}
+
+#route-query-options td {
+    padding-right: 20px;
+}
+
+#route-queries {
+    padding-bottom: 30px;
+}
+
+#point-query-dropdown-menu {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#point-query-options {
+    margin-bottom: 20px;
+}
+
+#point-query-options td {
+    padding-right: 20px;
+}
+
+#shortest-longest-query-dropdown-menu {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#shortest-longest-query-options {
+    margin-bottom: 20px;
+}
+
+#shortest-longest-query-options td {
+    padding-right: 20px;
+}
